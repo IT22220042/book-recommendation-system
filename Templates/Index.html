@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHRS Books</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> <!--bootsrap CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1427/1427745.png" type="image/x-icon"> <!-- change the icon in browser-->
+</head>
+<body>
+</body>
+<style>
+
+     body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .video-background {
+            width: 100%;
+            height: 400px; /* Set the height of the video here */
+            object-fit: cover; /* Ensure the video covers the entire container */
+        }
+        .nav-link:hover {
+            color: orange !important; /* Change text color on hover */
+        }
+        .nav-link.btn {
+            border-radius: 5px; /* Add rounded corners to buttons */
+        }
+
+        .modal-content {
+            background-color: #fff; /* Set modal content background color */
+            color: #000; /* Set modal content text color */
+        }
+        .modal-content.dark {
+            background-color: #000; /* Set modal content background color for dark theme */
+            color: #fff; /* Set modal content text color for dark theme */
+        }
+
+    /* SIGNUP and SIGNIN*/
+    .modal-dialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    margin: 0 auto;
+}
+
+.modal-content {
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+body.modal-open {
+    padding-right: 0 !important; /* Fix for modal shifting due to scrollbar */
+}
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.modal-body {
+    overflow-y: auto;
+    max-height: 80vh; /* To limit height of modal content on very tall screens */
+}
+
+.close {
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    color: #999;
+}
+
+.close:hover {
+    color: #333;
+    opacity: 0.8;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.form-control {
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Button Styles */
+.btn-primary-buy , .btn-primary-sup , .btn-primary-search , .btn-primary-zin ,  .btn-primary-zut , .btn-primary-apply , .btn-primary-m-cart , .btn-primary-m-sup , .btn-primary-m-sin{
+      background-color: #3b3b3b; /* Change to your desired color */
+            color: white; /* Text color */
+            padding: 10px 20px; /* Adjust padding for size */
+            font-size: 1rem; /* Font size */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Make it behave like a block */
+            transition: background-color 0.3s; /* Transition effect */
+}
+
+
+.btn-primary-cart, .btn-primary-sin , .btn-secondary-close {
+      background-color: white; /* Change to your desired color */
+            color: black; /* Text color */
+            padding: 10px 20px; /* Adjust padding for size */
+            font-size: 1rem; /* Font size */
+            border:  solid black;
+            border-radius: 5px; /* Rounded corners */
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Make it behave like a block */
+            transition: background-color 0.3s; /* Transition effect */
+}
+
+.btn-primary-buy:hover , .btn-primary-m-sup:hover
+.btn-primary-sup:hover, .btn-primary-m-cart:hover,
+.btn-primary-cart:hover , .btn-secondary-close:hover,
+.btn-primary-sin:hover , .btn-primary-apply:hover,
+.btn-primary-zut:hover, .btn-primary-zin:hover , .btn-primary-m-sin:hover{
+    background-color: #636363;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+
+.btn-primary:focus {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+}
+
+/* Spacing and Layout */
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.modal-body form {
+    padding-top: 15px;
+}
+
+@media (max-width: 576px) {
+    .modal-content {
+        padding: 10px;
+    }
+
+    .modal-body {
+        padding: 15px;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+}
+    .modal-title {
+    text-align: center; /* Center the text horizontally */
+    width: 100%;       /* Ensure the element takes full width */
+}
+.card {
+    background-color: inherit; /* Inherit background color based on theme */
+    color: inherit; /* Inherit text color based on theme */
+}
+.custom-btn {
+
+            background-color: #3b3b3b; /* Change to your desired color */
+            color: white; /* Text color */
+            padding: 10px 20px; /* Adjust padding for size */
+            font-size: 30px; /* Font size */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            text-align: center; /* Center the text */
+            text-decoration: none; /* Remove underline */
+            display: inline-block; /* Make it behave like a block */
+            transition: background-color 0.3s; /* Transition effect */
+        }
+
+        .custom-btn:hover {
+            background-color: #636363; /* Darker shade on hover */
+            color: white; /* Text color */
+        }
+</style>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+ <a class="navbar-brand mx-auto" style="font-weight: bold; ">AHRS Books</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><i class="fas fa-home"></i> Home</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="settingsLink"><i class="fas fa-cog"></i> Settings</a>
+      </li>
+
+       {% if session.get('logged_in') %}
+        <!-- Dropdown for logged-in user -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i> {{ session.get('username') }}
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+            <a class="dropdown-item btn-outline-danger" href="/logout">Log Out</a>
+          </div>
+      {% else %}
+        <!-- Show Sign Up and Sign In buttons when not logged in -->
+        <li class="nav-item">
+          <a class="nav-link btn btn-primary-sup mr-2" style="color: white;" href="#" data-toggle="modal" data-target="#signupModal">Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link btn btn-primary-sin" href="#" data-toggle="modal" data-target="#signinModal">Sign In</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+{% if not session.get('logged_in') %}
+<h1 style="text-align: center; font-weight: bold; font-style: italic; margin-top: 20px; margin-bottom: 20px;">Welcome to our Home Page</h1>
+{% endif %}
+<!-- Video -->
+<video class="video-background" autoplay loop muted>
+  <source src="static/HomePage.mp4" type="video/mp4">
+  Your browser does not support the video tag. Please upgrade to a modern browser.
+</video>
+
+<!-- Go To Main Page Button -->
+<div class="text-center mt-5">
+  <a  href="main"  class="custom-btn">Main Page</a>
+</div>
+
+{% if signup_message %}
+<!-- Bootstrap modal for displaying signup message -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageModalLabel">Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSgup">
+              <span aria-hidden="true">&times;</span>
+            </button>
+      </div>
+      <div class="modal-body">
+        <h5>{{ signup_message }}</h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnOk">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!--trending recommendations-->
+<!-- Products -->
+<div class="container mt-5">
+  <h2 class="text-center mb-4">TOP 20 BOOKS</h2>
+  <div class="row mt-4">
+    {% for index, product in trending_products.iterrows() %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4"  >
+      <div class="card">
+          <img src="{{  product['ImageURL'] }}" class="card-img-top" alt="{{ product['Title'] }}" style="height: 400px;">
+        <div class="card-body">
+          <h5 class="card-title">{{ truncate(product['Title'],20) }}</h5>
+          <p class="card-text text-center" style="font-weight: bold;">Ratings: {{ '%.2f' | format(product['Avg_Ratings']) }}</p>
+            <div class="d-flex justify-content-center">
+          <button type="button" class="btn btn-primary-buy" data-toggle="modal" data-target="#productModal{{ index }}">Buy Now</button>
+            <button type="button" class="btn btn-primary-cart ml-2 " onclick="confirmAddToCart('{{ product['Title'] }}')">Add to Cart</button>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="productModal{{ index }}" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center" id="productModalLabel">{{ product['Title'] }}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeX">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-4">
+                  <img src="{{  product['ImageURL'] }}" class="img-fluid" alt="{{ product['Title'] }}" style="height: 200px;">
+              </div>
+              <div class="col-md-8">
+                <p><strong>Review Count:</strong> {{ product['No_Of_Ratings'] }}</p>
+                <p><strong>Rating:</strong> {{ '%.2f' | format(product['Avg_Ratings']) }}</p>
+                <p><strong>Price:</strong> {{ random_price }}</p>
+                <!-- Add more details as needed -->
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn-secondary-close" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary-m-cart" onclick="confirmAddToCart('{{ product['Title'] }}')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+<!-- Bootstrap modal for sign up -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSU">
+          <span aria-hidden="true">&times;</span>
+         </button>
+      </div>
+      <div class="modal-body">
+        <form id="signupForm" action="/signup" method="post" onsubmit="return validatePasswords()">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+            <div class="mb-3">
+            <label for="password" class="form-label">Re Enter Password</label>
+            <input type="password" class="form-control" id="repassword" name="repassword" required>
+                <div id="passwordWarning" class="text-danger" style="display: none;"></div> <!-- Warning message placeholder -->
+          </div>
+             <div class="w-100 text-center">
+                <button type="submit" class="btn btn-primary-m-sup">Sign Up</button>
+             </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Bootstrap modal for sign in -->
+<div class="modal fade" id="signinModal" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signinModalLabel">Sign In</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeSI">
+          <span aria-hidden="true">&times;</span>
+         </button>
+      </div>
+      <div class="modal-body">
+        <form id="signinForm" action="/signin" method="post">
+          <div class="mb-3">
+            <label for="signinUsername" class="form-label">Username</label>
+            <input type="text" class="form-control" id="signinUsername" name="signinUsername" required>
+          </div>
+          <div class="mb-3">
+            <label for="signinPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="signinPassword" name="signinPassword" required>
+          </div>
+            <div class="w-100 text-center">
+               <button type="submit" class="btn btn-primary-m-sin">Sign In</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="closeX2">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>Choose Theme:</h5>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="theme" id="defaultTheme" value="default" checked>
+          <label class="form-check-label" for="defaultTheme">Default</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="theme" id="blackTheme" value="black">
+          <label class="form-check-label" for="blackTheme">Black Theme</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="theme" id="greenTheme" value="green">
+          <label class="form-check-label" for="greenTheme">Green Theme</label>
+        </div>
+        <hr>
+        <h5>Zoom:</h5>
+        <button type="button" class="btn btn-primary-zin mr-2" id="zoomIn">Zoom In</button>
+        <button type="button" class="btn btn-primary-zut" id="zoomOut">Zoom Out</button>
+        <span id="zoomValue">Zoom: 100%</span>
+        <hr>
+        <label for="fontSelector">Choose a font style:</label>
+        <select id="fontSelector">
+          <option value="Arial">Arial</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Courier New">Courier New</option>
+        </select>
+        <div id="content" style="font-size: 16px; font-family: Arial;">
+          This is an example text that will change its font size and style.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary-close" data-dismiss="modal" id="closebtn">Close</button>
+        <button type="button" class="btn-primary-apply" id="applyTheme">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--footer-->
+<footer class="footer bg-dark text-white">
+    <div class="container" style="padding-top:20px;">
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <h5>About Us</h5>
+                <p>At  AHRS Products, We enhance your shopping experience with personalized product recommendations based on your preferences and browsing history. Our intelligent system helps you find exactly what you need, offering a seamless and tailored shopping journey every time.</p>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="index">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <h5>Support</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <h5>Contact Us</h5>
+                <address>
+                    <strong>AHRS Products,</strong><br>
+                    22 Waliwita, Malabe<br>
+                    Sri Lanka<br>
+                    <i class="fas fa-phone"></i> Phone: +94771234567<br>
+                    <i class="fas fa-envelope"></i> Email: ahrsproducts1@gmail.com
+                </address>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <hr class="bg-light">
+                <p class="text-center">© 2024 Product Recommendation System. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- jQuery and Bootstrap JS (required for Bootstrap dropdowns) -->
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> <!-- script for modals-->
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<script>
+    function confirmAddToCart(isbn) {
+        // Show a confirmation dialog to the user
+        if (confirm("Are you sure you want to add this item to the cart?")) {
+            // If the user clicks "Yes", send a request to add the item to the cart
+            addToCart(isbn);
+        }
+    }
+
+    function addToCart(isbn) {
+        // Use AJAX to send the request to the server
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/add_to_cart', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // Show a success message to the user
+                alert('Item successfully added to the cart!');
+            } else {
+                alert('There was an error adding the item to the cart.');
+            }
+        };
+
+        // You can include additional data, such as the item ID
+        xhr.send(JSON.stringify({ item_id: isbn }));
+    }
+  // Handle click on Settings link to open the modal
+  document.getElementById('settingsLink').addEventListener('click', function() {
+    $('#settingsModal').modal('show');
+  });
+
+  // Handle theme apply button click
+  document.getElementById('applyTheme').addEventListener('click', function() {
+    // Get the selected theme value
+    var selectedTheme = document.querySelector('input[name="theme"]:checked').value;
+
+    // Apply the selected theme
+    if (selectedTheme === 'black') {
+      document.body.style.backgroundColor = 'black';
+      document.body.style.color = 'white';
+    } else if (selectedTheme === 'green') {
+      document.body.style.backgroundColor = 'green';
+      document.body.style.color = 'white';
+    } else {
+      // Default theme
+      document.body.style.backgroundColor = '#f8f9fa';
+      document.body.style.color = 'black';
+    }
+
+    // Close the modal
+       $('#settingsModal').modal('hide'); // Close modal
+  });
+
+   document.getElementById('closebtn').addEventListener('click', function() {
+       $('#settingsModal').modal('hide'); // Close modal
+    });
+
+    document.getElementById('closeX2').addEventListener('click', function() {
+       $('#settingsModal').modal('hide'); // Close modal
+    });
+     document.getElementById('closeSI').addEventListener('click', function() {
+       $('#signinModal').modal('hide'); // Close modal
+    });
+
+    document.getElementById('closeSU').addEventListener('click', function() {
+       $('#signupModal').modal('hide'); // Close modal
+    });
+
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+  // Store the initial state (default values)
+  const defaultFontFamily = 'Arial';
+  const defaultFontSize = '16px';
+  const defaultZoom = '100%';
+  const defaultTheme = 'default';
+
+  // Function to update the UI with stored values
+  function updateUI() {
+    const fontFamily = sessionStorage.getItem('fontFamily') || defaultFontFamily;
+    const fontSize = sessionStorage.getItem('fontSize') || defaultFontSize;
+    const zoom = sessionStorage.getItem('zoom') || defaultZoom;
+    const theme = sessionStorage.getItem('theme') || defaultTheme;
+
+    document.body.style.fontFamily = fontFamily;
+    document.body.style.fontSize = fontSize;
+    document.body.style.zoom = zoom;
+    document.getElementById('content').style.fontFamily = fontFamily;
+    document.getElementById('content').style.fontSize = fontSize;
+    document.getElementById('zoomValue').innerText = "Zoom: " + zoom;
+
+    // Update theme and ensure font color is visible
+    if (theme === 'black') {
+        document.body.style.backgroundColor = 'black';
+        document.body.style.color = 'white'; // Ensure font color is visible on black background
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.style.borderColor = 'white';
+        });
+    } else if (theme === 'green') {
+        document.body.style.backgroundColor = 'green';
+        document.body.style.color = 'black'; // Ensure font color is visible on green background
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.style.borderColor = 'white';
+        });
+    } else {
+        document.body.style.backgroundColor = ''; // Default background
+        document.body.style.color = ''; // Default font color
+    }
+
+    // Set the fontSelector and theme radio button values
+    document.getElementById('fontSelector').value = fontFamily;
+    document.querySelector(`input[name="theme"][value="${theme}"]`).checked = true;
+}
+
+  // Handle font style change
+  document.getElementById('fontSelector').addEventListener('change', function() {
+    sessionStorage.setItem('fontFamily', this.value);
+    document.getElementById('content').style.fontFamily = this.value;
+  });
+
+  // Handle zoom in button click
+  document.getElementById('zoomIn').addEventListener('click', function() {
+    let currentZoom = parseInt(document.body.style.zoom) || 100;
+    if (currentZoom < 200) {
+      currentZoom += 5;
+      sessionStorage.setItem('zoom', currentZoom + "%");
+      document.body.style.zoom = currentZoom + "%";
+      document.getElementById('zoomValue').innerText = "Zoom: " + currentZoom + "%";
+    }
+  });
+
+  // Handle zoom out button click
+  document.getElementById('zoomOut').addEventListener('click', function() {
+    let currentZoom = parseInt(document.body.style.zoom) || 100;
+    if (currentZoom > 5) {
+      currentZoom -= 5;
+      sessionStorage.setItem('zoom', currentZoom + "%");
+      document.body.style.zoom = currentZoom + "%";
+      document.getElementById('zoomValue').innerText = "Zoom: " + currentZoom + "%";
+    }
+  });
+
+  // Handle theme change on apply
+ document.getElementById('applyTheme').addEventListener('click', function() {
+    const selectedTheme = document.querySelector('input[name="theme"]:checked').value;
+    sessionStorage.setItem('theme', selectedTheme);
+    sessionStorage.setItem('fontFamily', document.getElementById('fontSelector').value);
+    sessionStorage.setItem('fontSize', document.getElementById('fontSizeSelector') ? document.getElementById('fontSizeSelector').value : defaultFontSize);
+    updateUI();
+});
+
+  // Reset to previous values when the modal is closed
+ document.getElementById('closebtn').addEventListener('click', function() {
+    // Reset modal controls to last session values
+    document.getElementById('fontSelector').value = sessionStorage.getItem('fontFamily') || defaultFontFamily;
+    document.querySelector(`input[name="theme"][value="${sessionStorage.getItem('theme') || defaultTheme}"]`).checked = true;
+    document.getElementById('zoomValue').innerText = "Zoom: " + (sessionStorage.getItem('zoom') || defaultZoom);
+});
+
+  // Apply stored settings on page load
+  updateUI();
+});
+ $(document).ready(function(){
+
+      $('#messageModal').modal('show');
+
+  });
+
+    document.getElementById('closeSgup').addEventListener('click', function() {
+       $('#messageModal').modal('hide'); // Close modal
+    });
+    document.getElementById('btnOk').addEventListener('click', function() {
+       $('#messageModal').modal('hide'); // Close modal
+    });
+
+    //validate the password
+    function validatePasswords() {
+    const password = document.getElementById("password").value;
+    const repassword = document.getElementById("repassword").value;
+    const warningDiv = document.getElementById("passwordWarning");
+
+    // Clear previous warning message
+    warningDiv.style.display = 'none';
+    warningDiv.textContent = '';
+
+    if (password !== repassword) {
+        warningDiv.textContent = "Passwords do not match. Please try again.";
+        warningDiv.style.display = 'block'; // Show the warning message
+        return false; // Prevent form submission
+    }
+    return true; // Allow form submission
+}
+
+    //clear the form
+    function clearForm() {
+    document.getElementById("signupForm").reset(); // Reset sign-up form fields
+    const signupWarningDiv = document.getElementById("passwordWarning");
+    signupWarningDiv.style.display = 'none'; // Hide sign-up warning message
+    signupWarningDiv.textContent = ''; // Clear sign-up warning message
+
+    document.getElementById("signinForm").reset(); // Reset sign-in form fields
+    const signinWarningDiv = document.getElementById("signinWarning");
+    signinWarningDiv.style.display = 'none'; // Hide sign-in warning message
+    signinWarningDiv.textContent = ''; // Clear sign-in warning message
+}
+
+// Event listener to clear the forms when the modals are closed
+$('#signupModal').on('hidden.bs.modal', function () {
+    clearForm();
+});
+$('#signinModal').on('hidden.bs.modal', function () {
+    clearForm();
+});
+</script>
+
+</body>
+</html>
+
+
