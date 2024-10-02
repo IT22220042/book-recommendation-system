@@ -1,7 +1,5 @@
 from flask import Flask, request, jsonify, render_template, session, redirect,url_for
-import pandas as pd
 import random
-import os
 from flask_sqlalchemy import SQLAlchemy
 import re
 import pandas as pd
