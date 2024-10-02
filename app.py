@@ -10,71 +10,49 @@ from sklearn.metrics.pairwise import cosine_similarity
 from datetime import datetime
 import json
 
-# create an object of flask
+#object of flask
 # this is built syntax we can't change this
 app = Flask(__name__)
 
-#request = when we create forms inside HTML, get and send data to backend
 
-#render_template
-#integrate frontend with backend
-#also navigate from page to another page
-#overall define - redirect from began to HTML pages.
-
-# load files===========================================================================================================
+# load files
 trending_products = pd.read_csv("Models/trending_dataset.csv")
 dataset = pd.read_csv("models/filtered_dataset.csv")
 
-# database configuration---------------------------------------
+# database configuration
 app.secret_key = "AHRSRecommendo"
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://root:@localhost/book_reco_system"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-# Define your model class for the 'signup' table
+#signup table
 class Signup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     cart_history = db.Column(db.Text, nullable=True)
-# Define your model class for the 'signup' table
-# Update your Signin model to store a timestamp instead of the password
+#signin table
 class Signin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     signin_time = db.Column(db.DateTime, default=datetime.utcnow)
 
-# Recommendations functions============================================================================================
-# Function to truncate product name
+
+
 def truncate(text, length):
     if len(text) > length:
         return text[:length] + "..."
     else:
         return text
 
-
-
-
-
 def collaborative_filtering_recommendations(dataset, target_user_id, top_n=20):
-    """
-    Recommends items based on collaborative filtering using user-item interactions.
 
-    Args:
-    - dataset (pd.DataFrame): The dataset containing user-item interactions with columns ['User-ID', 'ISBN', 'Rating'].
-    - target_user_id (int): The ID of the target user for whom to generate recommendations.
-    - top_n (int): The number of top recommendations to return.
-
-    Returns:
-    - pd.DataFrame: A DataFrame with details of the top recommended items.
-    """
-
-    # Create the user-item matrix
+    # user-item matrix
     user_item_matrix = dataset.pivot_table(index='User-ID', columns='Title', values='Rating').fillna(0)
 
-    # Calculate the user similarity matrix using cosine similarity
+    # Calculate the user similarity matrix
     user_similarity = cosine_similarity(user_item_matrix)
 
     # Check if target_user_id exists in the matrix
@@ -84,13 +62,13 @@ def collaborative_filtering_recommendations(dataset, target_user_id, top_n=20):
     # Find the index of the target user in the matrix
     target_user_index = user_item_matrix.index.get_loc(target_user_id)
 
-    # Get the similarity scores for the target user
+    # similarity scores for the target user
     user_similarities = user_similarity[target_user_index]
 
-    # Sort the users by similarity in descending order (excluding the target user)
+    # users by similarity in descending order
     similar_users_indices = user_similarities.argsort()[::-1][1:]
 
-    # Generate recommendations based on similar users
+    # recommendations based on similar users
     recommended_items = []
 
     for user_index in similar_users_indices:
@@ -104,7 +82,7 @@ def collaborative_filtering_recommendations(dataset, target_user_id, top_n=20):
     # Ensure unique titles in recommendations
     recommended_items = list(set(recommended_items))
 
-    # Get the details of recommended items (up to top_n unique titles)
+    # details of recommended items
     recommended_items_details = dataset[dataset['Title'].isin(recommended_items)][
         ['Title', 'Author', 'ImageURL', 'Rating' , 'Publication Year']].drop_duplicates(subset='Title').head(top_n)
 
@@ -116,19 +94,8 @@ def collaborative_filtering_recommendations(dataset, target_user_id, top_n=20):
 
 
 def content_based_recommendations(dataset, item_name, top_n=10):
-    """
-    Recommends items based on content similarity using 'Title' or 'Author'.
 
-    Args:
-    - dataset (pd.DataFrame): The dataset containing items with columns ['Title', 'Author', 'ReviewCount', 'ImageURL', 'Rating'].
-    - item_name (str): The name of the item (Title or Author) for which similar items are recommended.
-    - top_n (int): The number of top recommendations to return.
 
-    Returns:
-    - pd.DataFrame: A DataFrame with details of the top recommended similar items.
-    """
-
-    # Clean the input book title or author name (lowercase, remove extra spaces, punctuation)
     def clean_text(text):
         text = text.lower().strip()
         return re.sub(r'[^\w\s]', '', text)  # Remove punctuation
@@ -162,7 +129,7 @@ def content_based_recommendations(dataset, item_name, top_n=10):
     # Create a TF-IDF vectorizer for the combined 'Title' and 'Author'
     tfidf_vectorizer = TfidfVectorizer(stop_words='english')
 
-    # Apply TF-IDF vectorization to the content (Title + Author)
+    #TF-IDF vectorization to the content (Title + Author)
     tfidf_matrix_content = tfidf_vectorizer.fit_transform(dataset['content'])
 
     # Find the index of the matched item
@@ -170,22 +137,18 @@ def content_based_recommendations(dataset, item_name, top_n=10):
         item_index = dataset[dataset['Title'] == item_name].index[0]
     except IndexError:
         print(f"Item '{item_name}' not found in the dataset.")
-        return pd.DataFrame()  # Return empty DataFrame if not found
+        return pd.DataFrame()
 
-    # Get the cosine similarity scores for the item
+    #  cosine similarity scores
     cosine_similarities_content = cosine_similarity(tfidf_matrix_content[item_index], tfidf_matrix_content)
 
-    # Sort similar items by similarity score in descending order
-    similar_items = list(enumerate(cosine_similarities_content[0]))
+    #Sort similar items by similarity score in descending order
+    similar_items = sorted(enumerate(cosine_similarities_content[0]), key=lambda x: x[1], reverse=True)
 
-    # Sort similar items by similarity score in descending order
-    similar_items = sorted(similar_items, key=lambda x: x[1], reverse=True)
-
-    # Get the top N most similar items (excluding the item itself)
     recommended_items_details = []
     seen_titles = set()
 
-    for index, score in similar_items[1:]:  # Skip the first one (itself)
+    for index, score in similar_items[1:]:
         if len(recommended_items_details) >= top_n:
             break
         title = dataset.iloc[index]['Title']
@@ -198,7 +161,7 @@ def content_based_recommendations(dataset, item_name, top_n=10):
 #routes
 @app.route("/")
 def index():
-    # Create a list of random image URLs for each product
+
     product_image_urls = trending_products['ImageURL'].tolist()
     price = [1000, 1500, 2000, 2450, 2750, 950, 800, 3000, 4000, 5000]
     error = None
@@ -206,7 +169,7 @@ def index():
         password = request.form['password']
         repassword = request.form['repassword']
 
-        # Check if passwords match
+
         if password != repassword:
             error = "Passwords do not match. Please try again."
 
@@ -223,6 +186,7 @@ def main():
 @app.route("/index") #name we give to href link
 def indexReDirect():
     trending_products['ImageURL'] = trending_products['ImageURL']
+    # list of random price for each product
     price = [1000, 1500, 2000, 2450, 2750, 950, 800, 3000, 4000, 5000]
     return render_template('index.html', trending_products=trending_products.head(20),truncate = truncate,
                            random_price = random.choice(price))
@@ -238,9 +202,8 @@ def signup():
         new_signup = Signup(username=username, email=email, password=password)
         db.session.add(new_signup)
         db.session.commit()
-
-
         price = [1000, 1500, 2000, 2450, 2750, 950, 800, 3000, 4000, 5000]
+
         return render_template('index.html', trending_products=trending_products.head(20), truncate=truncate,
                                random_price=random.choice(price),
                                signup_message='User signed up successfully!'
@@ -250,20 +213,20 @@ def signup():
 def add_to_cart():
     try:
         if 'username' in session:
-            # Fetch the currently signed-in user's username
+            # currently signed-in user's username
             current_username = session['username']
 
-            # Fetch the user record from the database
+            # user record from the database
             user = Signup.query.filter_by(username=current_username).first()
 
             if not user:
                 return jsonify({"error": "User not found"}), 404
 
-            # Get the item_id from the request data
+            # item_id from the request data
             data = request.get_json()
             item_id = data.get('item_id')
 
-            # Update the user's cart history (assuming it's stored as JSON)
+            # Update the user's cart history
             if user.cart_history:
                 cart_history = json.loads(user.cart_history)
             else:
@@ -282,7 +245,7 @@ def add_to_cart():
         print(f"Error: {e}")
         return jsonify({"error": "An error occurred"}), 500
 
-# Route for signin page
+# Route for signin modal
 @app.route('/signin', methods=['POST', 'GET'])
 def signin():
     if request.method == 'POST':
@@ -297,12 +260,11 @@ def signin():
             session['username'] = username
             session['logged_in'] = True
 
-            # Log username and sign-in time in the Signin table (without storing the password)
+            # store the user name and the sign in time
             new_signin = Signin(username=username)
             db.session.add(new_signin)
             db.session.commit()
 
-            # Create a list of random price for each product
             price = [1000, 1500, 2000, 2450, 2750, 950, 800, 3000, 4000, 5000]
 
             return render_template('index.html', trending_products=trending_products.head(20),
@@ -312,8 +274,7 @@ def signin():
             return render_template('index.html', trending_products=trending_products.head(0),
                                    truncate=truncate, signup_message='User sign-in failed!')
 
-    # Ensure to return something in case of a GET request
-    return render_template('main.html')  # Create a signin.html for the GET request if not exists
+    return render_template('main.html')
 
 
 @app.route('/logout')
@@ -364,7 +325,7 @@ def recommendations():
                                            random_prices=random_prices, truncate=truncate)
 
             else:
-                # Handle GET request for collaborative filtering recommendations
+                # collaborative filtering recommendations
                 collaborative_rec = collaborative_filtering_recommendations(dataset, target_user_id)
 
                 if collaborative_rec.empty:
@@ -374,7 +335,6 @@ def recommendations():
                 return render_template('main.html', truncate=truncate, collaborative_rec=collaborative_rec)
 
         else:
-            # Handle the case when user is not logged in
             if request.method == 'POST':
                 prod = request.form.get('prod')
                 nbr = request.form.get('nbr')
@@ -389,7 +349,7 @@ def recommendations():
                     message = "The number of recommendations must be an integer."
                     return render_template('main.html', message=message)
 
-                # Get content-based recommendations based on user input
+                # content-based recommendations based on user input
                 content_based_rec = content_based_recommendations(dataset, prod, top_n=nbr)
 
                 if content_based_rec.empty:
@@ -400,7 +360,7 @@ def recommendations():
                     return render_template('main.html', content_based_rec=content_based_rec,
                                            random_prices=random_prices, truncate=truncate)
 
-            # If GET request and not signed in, return main.html with a prompt or empty state
+            # If not signed in, return main.html with a prompt or empty state
             return render_template('main.html', message="Please sign in to access personalized recommendations.")
 
     except Exception as e:
