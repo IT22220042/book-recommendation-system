@@ -267,7 +267,7 @@ body.modal-open {
         <div class="card-body">
           <h5 class="card-title">{{ truncate(product['Title'], 20) }}</h5>
           <p class="card-text">Author: {{ product['Author'] }}</p>
-          <button type="button" class="btn btn-primary-buy" data-toggle="modal" data-target="#productModal{{ index }}">Buy Now</button>
+          <button type="button" class="btn btn-primary-buy" data-toggle="modal" data-target="#productModal1{{ index }}">Buy Now</button>
             <button type="button" class="btn btn-primary-cart ml-2 " onclick="confirmAddToCart('{{ product['Title'] }}')">Add to Cart</button>
         </div>
       </div>
@@ -453,7 +453,7 @@ body.modal-open {
         <h5>Choose Theme:</h5>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="theme" id="defaultTheme" value="default" checked>
-          <label class="form-check-label" for="defaultTheme">Default</label>
+          <label class="form-check-label" for="defaultTheme">White Theme</label>
         </div>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="theme" id="blackTheme" value="black">
@@ -646,14 +646,14 @@ body.modal-open {
         document.body.style.color = 'black';
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            card.style.borderColor = 'white';
+            card.style.borderColor = 'black';
         });
     }else if (theme === 'yellow') {
         document.body.style.backgroundColor = '#ffe5d4';
         document.body.style.color = 'black';
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            card.style.borderColor = 'white';
+            card.style.borderColor = 'black';
         });
     } else {
         document.body.style.backgroundColor = '';

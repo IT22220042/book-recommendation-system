@@ -406,7 +406,7 @@ body.modal-open {
         <h5>Choose Theme:</h5>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="theme" id="defaultTheme" value="default" checked>
-          <label class="form-check-label" for="defaultTheme">Default</label>
+          <label class="form-check-label" for="defaultTheme">White Theme</label>
         </div>
         <div class="form-check">
           <input class="form-check-input" type="radio" name="theme" id="blackTheme" value="black">
@@ -601,14 +601,14 @@ body.modal-open {
         document.body.style.color = 'black';
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            card.style.borderColor = 'white';
+            card.style.borderColor = 'black';
         });
     }else if (theme === 'yellow') {
         document.body.style.backgroundColor = '#ffe5d4';
         document.body.style.color = 'black';
         const cards = document.querySelectorAll('.card');
         cards.forEach(card => {
-            card.style.borderColor = 'white';
+            card.style.borderColor = 'black';
         });
     } else {
         document.body.style.backgroundColor = '';
