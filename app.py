@@ -321,6 +321,19 @@ def recommendations():
                     random_prices = [random.choice([40, 50, 60, 70, 100, 122, 106, 50, 30, 50]) for _ in range(len(content_based_rec))]
                     return render_template('main.html', content_based_rec=content_based_rec,
                                            random_prices=random_prices, truncate=truncate)
+                hybrid_rec = hybrid_recommendations(dataset, target_user_id, prod, top_n=nbr)
+
+                if hybrid_rec.empty:
+                    message = f"No hybrid recommendations available for the product '{prod}'."
+                    return render_template('main.html', message=message)
+                else:
+                    # Generate random prices for display
+                    random_prices = [random.choice([40, 50, 60, 70, 100, 122, 106, 50, 30, 50]) for _ in
+                                     range(len(hybrid_rec))]
+
+                    # Render template with hybrid recommendations
+                    return render_template('main.html', hybrid_rec=hybrid_rec, random_prices=random_prices,
+                                           truncate=truncate)
 
             else:
                 # collaborative filtering recommendations
