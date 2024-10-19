@@ -156,6 +156,47 @@ def content_based_recommendations(dataset, item_name, top_n=10):
 
     return pd.DataFrame(recommended_items_details).head(top_n)
 
+
+def hybrid_recommendations(dataset, target_user_id, item_name, top_n=20, collaborative_weight=0.7, content_weight=0.3):
+    # Get collaborative filtering recommendations
+    try:
+        collaborative_recommendations = collaborative_filtering_recommendations(dataset, target_user_id, top_n=top_n)
+    except ValueError:
+        collaborative_recommendations = pd.DataFrame()  # If no user found, return an empty DataFrame for collaborative part
+
+    # Get content-based filtering recommendations
+    content_recommendations = content_based_recommendations(dataset, item_name, top_n=top_n)
+
+    # If both collaborative and content-based recommendations are empty, return an empty DataFrame
+    if collaborative_recommendations.empty and content_recommendations.empty:
+        print("No recommendations available.")
+        return pd.DataFrame()
+
+    # Merge recommendations from both methods
+    all_recommendations = pd.concat([collaborative_recommendations, content_recommendations])
+
+    # Remove duplicates and keep the first occurrence
+    all_recommendations = all_recommendations.drop_duplicates(subset='Title')
+
+    # new column for combined score
+    all_recommendations['Score'] = 0.0
+
+    # Calculate collaborative filtering score
+    if not collaborative_recommendations.empty:
+        all_recommendations.loc[all_recommendations['Title'].isin(collaborative_recommendations['Title']),
+        'Score'] += collaborative_weight
+
+    # Calculate content-based filtering score
+    if not content_recommendations.empty:
+        all_recommendations.loc[all_recommendations['Title'].isin(content_recommendations['Title']),
+        'Score'] += content_weight
+
+    # Sort recommendations by combined score in descending order
+    sorted_recommendations = all_recommendations.sort_values(by='Score', ascending=False).head(top_n)
+
+    return sorted_recommendations[['Title', 'Author', 'ImageURL', 'Rating', 'Publication Year', 'Score']].head(top_n)
+
+
 #routes
 @app.route("/")
 def index():
